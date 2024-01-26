@@ -47,18 +47,23 @@ def login():
     user = User.query.filter_by(username=username).first()
 
     if user and check_password_hash(user.password_hash, password):
+        print("login pased")
         session['user_id'] = user.id
         session['username'] = user.username
+        print(session)
         return redirect(url_for('dashboard'))
     else:
+        print("login failed")
         flash('Invalid username or password')
         return redirect(url_for('index'))
 
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' in session:
+        print(f"User ID in session: {session['user_id']}")
         return render_template('welcome.html', username=session['username'])
     else:
+        print("User ID not in session")
         return redirect(url_for('index'))
 
 @app.route('/logout')
