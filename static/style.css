@@ -70,5 +70,11 @@ button {
     background-color: #c82333;
 }
 
+#usernameAvailability {
+    display: block;
+    margin-top: 5px; /* Add some spacing between the input and the span */
+    font-size: 12px; /* Adjust the font size as needed */
+    color: #59bf2a; /* Set the color to a neutral shade */
+}
 
 

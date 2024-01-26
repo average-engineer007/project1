@@ -3,22 +3,45 @@
 <head>
     <title>Register</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
     <div class="form-container">
         <h2>Register</h2>
         <form action="/register" method="post">
             <div class="form-group">
-                <input type="text" name="username" placeholder="Username" required>
+                <input type="text" name="username" id="username" placeholder="Username" required autocomplete="off">
+                <span id="usernameAvailability"></span>
             </div>
             <div class="form-group">
-                <input type="password" name="password" placeholder="Password" required>
+                <input type="password" name="password" placeholder="Password" required autocomplete="off">
             </div>
             <div class="form-group">
-                <button type="submit">Register</button>
+                <button type="submit" id="registerButton" disabled>Register</button>
             </div>
         </form>
         <p>Already have an account? <a href="/">Login here</a></p>
+
+        <script>
+            $(document).ready(function () {
+                $('#username').on('input', function () {
+                    var username = $(this).val();
+
+                    // Perform an asynchronous request to the server to check username availability
+                    $.ajax({
+                        url: '/check_username',
+                        method: 'POST',
+                        data: { 'username': username },
+                        success: function (response) {
+                            $('#usernameAvailability').text(response.status);
+
+                            var registerButton = $('#registerButton');
+                            registerButton.prop('disabled', response.status !== 'Username available !!');
+                        }
+                    });
+                });
+            });
+        </script>
     </div>
 </body>
 </html>

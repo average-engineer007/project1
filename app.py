@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, session
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Replace with your actual secret key
+app.secret_key = 'just_fafo'  # Replace with your actual secret key
 
 # Database Configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
@@ -66,6 +66,15 @@ def logout():
     session.pop('user_id', None)
     session.pop('username', None)
     return redirect(url_for('index'))
+
+@app.route('/check_username', methods=['POST'])
+def used_user_name():
+    username = request.form.get('username')
+    user = User.query.filter_by(username = username).first()
+    if user:
+        return jsonify({'status': 'Username already taken !!'})
+    else:
+        return jsonify({'status': 'Username available !!'})
 
 if __name__ == '__main__':
     app.run(debug=True)
