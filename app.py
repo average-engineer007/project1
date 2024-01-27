@@ -2,16 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
-from jugaad_data.nse import stock_df
-import pandas as pd
-import time
-import pickle  
-import pyarrow as pa
-import pyarrow.orc as orc
-import numpy as np 
-import matplotlib.pyplot as plt 
-import os
-import sys
+from dateutil.relativedelta import relativedelta
+from nselib import capital_market
+
+
+curr_date = date.today().strftime("%d-%m-%Y")
 
 app = Flask(__name__)
 app.secret_key = 'just_fafo'  # Replace with your actual secret key
@@ -58,23 +53,18 @@ def login():
     user = User.query.filter_by(username=username).first()
 
     if user and check_password_hash(user.password_hash, password):
-        print("login pased")
         session['user_id'] = user.id
         session['username'] = user.username
-        print(session)
         return redirect(url_for('dashboard'))
     else:
-        print("login failed")
         flash('Invalid username or password')
         return redirect(url_for('index'))
 
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' in session:
-        print(f"User ID in session: {session['user_id']}")
         return render_template('welcome.html', username=session['username'])
     else:
-        print("User ID not in session")
         return redirect(url_for('index'))
 
 @app.route('/logout')
@@ -91,6 +81,21 @@ def used_user_name():
         return jsonify({'status': 'Username already taken !!'})
     else:
         return jsonify({'status': 'Username available !!'})
+
+@app.route('/fetchStockData', methods = ['POST'])
+def fetchStockData():
+    symbol = request.form.get('selectedStock')
+    targ_date = date.today() + relativedelta(years=-5)
+    targ_date = targ_date.strftime("%d-%m-%Y")
+    print(f"Symbol received: {symbol}")
+    df = capital_market.price_volume_and_deliverable_position_data(symbol=symbol, from_date=targ_date, to_date=curr_date)
+    print("Data obtained")
+    required_df_in_json = df[['Date',
+                      'ClosePrice']].to_json(orient='split')
+    data = jsonify(required_df_in_json)
+    print("Data sent")
+
+    return data
 
 if __name__ == '__main__':
     app.run(debug=True,port=5001)

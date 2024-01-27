@@ -3,76 +3,71 @@
 <head>
     <title>Home Page </title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <div class="stocks">
-        <label for ="selectOption"> Select a Stock to Explore:</label>
-        <select id="selectOption" name ="selectOption">
-            <option value="ADANIENT">Adani Enterprises Ltd.</option>
-            <option value="ADANIPORTS">Adani Ports and Special Economic Zone Ltd.</option>
-            <option value="APOLLOHOSP">Apollo Hospitals Enterprise Ltd.</option>
-            <option value="ASIANPAINT">Asian Paints Ltd.</option>
-            <option value="AXISBANK">Axis Bank Ltd.</option>
-            <option value="BAJAJ-AUTO">Bajaj Auto Ltd.</option>
-            <option value="BAJFINANCE">Bajaj Finance Ltd.</option>
-            <option value="BAJAJFINSV">Bajaj Finserv Ltd.</option>
-            <option value="BPCL">Bharat Petroleum Corporation Ltd.</option>
-            <option value="BHARTIARTL">Bharti Airtel Ltd.</option>
-            <option value="BRITANNIA">Britannia Industries Ltd.</option>
-            <option value="CIPLA">Cipla Ltd.</option>
-            <option value="COALINDIA">Coal India Ltd.</option>
-            <option value="DIVISLAB">Divi's Laboratories Ltd.</option>
-            <option value="DRREDDY">Dr. Reddy's Laboratories Ltd.</option>
-            <option value="EICHERMOT">Eicher Motors Ltd.</option>
-            <option value="GRASIM">Grasim Industries Ltd.</option>
-            <option value="HCLTECH">HCL Technologies Ltd.</option>
-            <option value="HDFCBANK">HDFC Bank Ltd.</option>
-            <option value="HDFCLIFE">HDFC Life Insurance Company Ltd.</option>
-            <option value="HEROMOTOCO">Hero MotoCorp Ltd.</option>
-            <option value="HINDALCO">Hindalco Industries Ltd.</option>
-            <option value="HINDUNILVR">Hindustan Unilever Ltd.</option>
-            <option value="ICICIBANK">ICICI Bank Ltd.</option>
-            <option value="ITC">ITC Ltd.</option>
-            <option value="INDUSINDBK">IndusInd Bank Ltd.</option>
-            <option value="INFY">Infosys Ltd.</option>
-            <option value="JSWSTEEL">JSW Steel Ltd.</option>
-            <option value="KOTAKBANK">Kotak Mahindra Bank Ltd.</option>
-            <option value="LT">Larsen & Toubro Ltd.</option>
-            <option value="MARUTI">Maruti Suzuki India Ltd.</option>
-            <option value="NTPC">NTPC Ltd.</option>
-            <option value="NESTLEIND">Nestle India Ltd.</option>
-            <option value="ONGC">Oil & Natural Gas Corporation Ltd.</option>
-            <option value="POWERGRID">Power Grid Corporation of India Ltd.</option>
-            <option value="RELIANCE">Reliance Industries Ltd.</option>
-            <option value="SBILIFE">SBI Life Insurance Company Ltd.</option>
-            <option value="SBIN">State Bank of India</option>
-            <option value="SUNPHARMA">Sun Pharmaceutical Industries Ltd.</option>
-            <option value="TCS">Tata Consultancy Services Ltd.</option>
-            <option value="TATACONSUM">Tata Consumer Products Ltd.</option>
-            <option value="TATAMOTORS">Tata Motors Ltd.</option>
-            <option value="TATASTEEL">Tata Steel Ltd.</option>
-            <option value="TECHM">Tech Mahindra Ltd.</option>
-            <option value="TITAN">Titan Company Ltd.</option>
-            <option value="UPL">UPL Ltd.</option>
-            <option value="ULTRACEMCO">UltraTech Cement Ltd.</option>
-            <option value="WIPRO">Wipro Ltd.</option>
-        </select>
-
-        <label for="basis">Select Basis:</label>
-        <select id="basis" name="basis">
-            <option value="daily">Daily: Plot the daily data for the stock</option>
-            <option value="weekly">Weekly: Plot the weekly data for the stock</option>
-            <option value="monthly">Monthly: Plot the monthly data for the stock</option>
-        </select>
-
-        <label for="duration">Enter Duration:</label>
-        <input type="number" id="duration" name="duration" min="1" placeholder="Enter number of years/days/weeks">
-   
-        <button onclick="updatePlot()">Update Plot</button>
-   
+      <form id="stockSelect" action="/fetchStockData" method="POST">  
+        <div class="stocks">
+            <label for ="selectOption"> Select a Stock to Explore:</label>
+            <select id="selectOption" name ="selectedStock">
+                <option value="ADANIENT">Adani Enterprises Ltd.</option>
+                <option value="ADANIPORTS">Adani Ports and Special Economic Zone Ltd.</option>
+                <option value="APOLLOHOSP">Apollo Hospitals Enterprise Ltd.</option>
+                <option value="ASIANPAINT">Asian Paints Ltd.</option>
+                <option value="AXISBANK">Axis Bank Ltd.</option>
+                <option value="BAJAJ-AUTO">Bajaj Auto Ltd.</option>
+                <option value="BAJFINANCE">Bajaj Finance Ltd.</option>
+                <option value="BAJAJFINSV">Bajaj Finserv Ltd.</option>
+                <option value="BPCL">Bharat Petroleum Corporation Ltd.</option>
+                <option value="BHARTIARTL">Bharti Airtel Ltd.</option>
+                <option value="BRITANNIA">Britannia Industries Ltd.</option>
+                <option value="CIPLA">Cipla Ltd.</option>
+                <option value="COALINDIA">Coal India Ltd.</option>
+                <option value="DIVISLAB">Divi's Laboratories Ltd.</option>
+                <option value="DRREDDY">Dr. Reddy's Laboratories Ltd.</option>
+                <option value="EICHERMOT">Eicher Motors Ltd.</option>
+                <option value="GRASIM">Grasim Industries Ltd.</option>
+                <option value="HCLTECH">HCL Technologies Ltd.</option>
+                <option value="HDFCBANK">HDFC Bank Ltd.</option>
+                <option value="HDFCLIFE">HDFC Life Insurance Company Ltd.</option>
+                <option value="HEROMOTOCO">Hero MotoCorp Ltd.</option>
+                <option value="HINDALCO">Hindalco Industries Ltd.</option>
+                <option value="HINDUNILVR">Hindustan Unilever Ltd.</option>
+                <option value="ICICIBANK">ICICI Bank Ltd.</option>
+                <option value="ITC">ITC Ltd.</option>
+                <option value="INDUSINDBK">IndusInd Bank Ltd.</option>
+                <option value="INFY">Infosys Ltd.</option>
+                <option value="JSWSTEEL">JSW Steel Ltd.</option>
+                <option value="KOTAKBANK">Kotak Mahindra Bank Ltd.</option>
+                <option value="LT">Larsen & Toubro Ltd.</option>
+                <option value="MARUTI">Maruti Suzuki India Ltd.</option>
+                <option value="NTPC">NTPC Ltd.</option>
+                <option value="NESTLEIND">Nestle India Ltd.</option>
+                <option value="ONGC">Oil & Natural Gas Corporation Ltd.</option>
+                <option value="POWERGRID">Power Grid Corporation of India Ltd.</option>
+                <option value="RELIANCE">Reliance Industries Ltd.</option>
+                <option value="SBILIFE">SBI Life Insurance Company Ltd.</option>
+                <option value="SBIN">State Bank of India</option>
+                <option value="SUNPHARMA">Sun Pharmaceutical Industries Ltd.</option>
+                <option value="TCS">Tata Consultancy Services Ltd.</option>
+                <option value="TATACONSUM">Tata Consumer Products Ltd.</option>
+                <option value="TATAMOTORS">Tata Motors Ltd.</option>
+                <option value="TATASTEEL">Tata Steel Ltd.</option>
+                <option value="TECHM">Tech Mahindra Ltd.</option>
+                <option value="TITAN">Titan Company Ltd.</option>
+                <option value="UPL">UPL Ltd.</option>
+                <option value="ULTRACEMCO">UltraTech Cement Ltd.</option>
+                <option value="WIPRO">Wipro Ltd.</option>
+            </select>
+        </div>
+    </form>
+    <div class ="graphs">
+        <div id="plot"></div>
     </div>
-    <div id="plot"></div>
+    
     <script>
         var data = [{
             x: [1,2,3,4,5],
@@ -93,6 +88,54 @@
         Plotly.newPlot('plot',data,layout);
         layout.xaxis.fixedrange = false;
         layout.yaxis.fixedrange = false;
+        
+        function updatePlotSize(){
+            var container = document.getElementById('plot');
+            var newWidth = window.innerWidth*0.75;
+            var newHeight = window.innerHeight*0.75;
+            var newPadding = 20;
+            container.style.width = newWidth + 'px';
+            container.style.height = newHeight + 'px';
+
+            Plotly.relayout('plot', {
+                width : newWidth-(2*newPadding),
+                height : newHeight-(2*newPadding)
+            });
+        }
+
+        window.addEventListener('resize', updatePlotSize);
+        window.addEventListener('load',updatePlotSize);
+
+        function updatePlot(data){
+            var newData = [{
+                x: data['DATE'],
+                y: data['CLOSE'],
+                type: 'scatter',
+                mode: 'lines+markers'
+            }];
+            Plotly.newplot('plot',newData);
+        }
+
+        $(document).ready(function(){
+            $('#selectOption').on('change', function(){
+                var selectedStock = $(this).val();
+                $.ajax({
+                    type : 'POST',
+                    url: '/fetchStockData',
+                    data: {selectedStock: selectedStock},
+                    success : function(response){
+                        console.log(response);
+                        updatePlot(response);
+                    },
+                    error: function(error){
+                        console.error(error);
+                    }
+                });
+            });
+            $('#stockSelect').on('submit',function(event){
+                event.preventDefault();
+            });
+        });
     </script>
     
 

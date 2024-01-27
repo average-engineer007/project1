@@ -1,7 +1,7 @@
 /* style.css */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #171a16;
+    background-color: #f2f5d2;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -80,15 +80,37 @@ button {
 
 .stocks {
     position: fixed;
-    top: 0;
+    top: 20%;
     right: 0;
-    height: 95%;
-    width: 200px;
-    border-radius: 10px;
-    background-color: #faf7f2;
+    height: 80%;
+    width: 20%;
+    box-sizing: border-box;
     padding: 20px;
+    border-radius: 10px;
+    background-color: rgb(235, 235, 243);
     box-shadow: -2px 0 5px rgba(177, 42, 42, 0.1);
     
+}
+
+.graphs{
+    position: fixed;
+    top: 20%;
+    right: 20%; 
+    height: 80%;
+    width: 80%;
+    box-sizing: border-box;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #171a16;
+    box-shadow: -2px 0 5px rgba(177, 42, 42, 0.1)
+}
+
+#plot{
+    height : 100%;
+    width : 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    padding: 20px;
 }
 
 label
@@ -97,7 +119,7 @@ label
     margin-bottom: 10px;
 }
 select{
-    width: 200px;
+    width: 80%;
     padding: 10px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
