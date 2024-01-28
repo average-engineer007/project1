@@ -85,13 +85,24 @@ def used_user_name():
 @app.route('/fetchStockData', methods = ['POST'])
 def fetchStockData():
     symbol = request.form.get('selectedStock')
-    targ_date = date.today() + relativedelta(years=-5)
+    targ_date = date.today() + relativedelta(years=-1)
     targ_date = targ_date.strftime("%d-%m-%Y")
     print(f"Symbol received: {symbol}")
     df = capital_market.price_volume_and_deliverable_position_data(symbol=symbol, from_date=targ_date, to_date=curr_date)
     print("Data obtained")
+    required_df = df[['Date',
+                    'OpenPrice',
+                    'ClosePrice',
+                    'HighPrice',
+                    'LowPrice']]
+    numeric_columns = ['OpenPrice', 'ClosePrice', 'HighPrice', 'LowPrice']
+    required_df[numeric_columns] = required_df[numeric_columns].replace({',': ''}, regex=True)
+    required_df.to_csv('required.csv')
     required_df_in_json = df[['Date',
-                      'ClosePrice']].to_json(orient='split', index=False)
+                            'OpenPrice',
+                            'ClosePrice',
+                            'HighPrice',
+                            'LowPrice']].to_json(orient='split', index=False)
     data = jsonify(required_df_in_json)
     print("Data sent")
 
