@@ -106,14 +106,19 @@
         window.addEventListener('resize', updatePlotSize);
         window.addEventListener('load',updatePlotSize);
 
-        function updatePlot(data){
+        function updatePlot(response){
+            var data = JSON.parse(response);
+
             var newData = [{
-                x: data['DATE'],
-                y: data['CLOSE'],
+                x: data.data.map(entry => entry[0]),
+                y: data.data.map(entry => entry[1]),
                 type: 'scatter',
                 mode: 'lines+markers'
             }];
-            Plotly.newplot('plot',newData);
+            Plotly.newPlot('plot',newData);
+            console.log('X values:', data.data.map(entry => entry[0]));
+            console.log('Y values:', data.data.map(entry => entry[1]));
+
         }
 
         $(document).ready(function(){

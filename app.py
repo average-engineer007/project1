@@ -91,7 +91,7 @@ def fetchStockData():
     df = capital_market.price_volume_and_deliverable_position_data(symbol=symbol, from_date=targ_date, to_date=curr_date)
     print("Data obtained")
     required_df_in_json = df[['Date',
-                      'ClosePrice']].to_json(orient='split')
+                      'ClosePrice']].to_json(orient='split', index=False)
     data = jsonify(required_df_in_json)
     print("Data sent")
 
@@ -99,20 +99,3 @@ def fetchStockData():
 
 if __name__ == '__main__':
     app.run(debug=True,port=5001)
-
-
-# def process_stock():
-#     selected_stock = request.form.get('selectOption')
-#     # Perform processing on the selected stock
-#     # For example, you can print it to the console
-#     today=date.today()
-#     years=10
-#     print("Selected Stock:", selected_stock)
-#     smbl=selected_stock
-#     df = stock_df(symbol=smbl, from_date=date(today.year-years, today.month, today.day-x), to_date=today, series="EQ")
-#     selected_columns = ['DATE', 'OPEN', 'CLOSE', 'HIGH', 'LOW', 'LTP', 'VOLUME', 'VALUE', 'NO OF TRADES']
-#     data = df[selected_columns]
-#     # Add your processing logic here
-
-#     # Return a response (this is optional)
-#     return "Processing stock: " + selected_stock
