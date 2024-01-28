@@ -93,7 +93,7 @@ def used_user_name():
         return jsonify({'status': 'Username available !!'})
 
 if __name__ == '__main__':
-    app.run(debug=True,port=5001)
+    app.run(debug=True,port=5000)
 
 
 # def process_stock():
