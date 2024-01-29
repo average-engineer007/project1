@@ -70,7 +70,7 @@
             </select>
             <label for="duration">Enter Duration:</label>
             <input type="number" id="duration" name="duration" min="1" placeholder="Enter number of years/days/weeks">
-            <button id="toggleDataButton" type="button">Toggle Data</button>
+            <button id="submitButton" type="submit">Submit</button>
         </div>
     </form>
     <div class ="graphs">
@@ -136,11 +136,14 @@
             $('#selectOption').on('change', function () {
                 var selectedStock = $(this).val();
                 var timeframe = $('#toggleDataButton').text().toLowerCase();
-    
+                var duration = $('#duration').val() || 1;
                 $.ajax({
                     type: 'POST',
                     url: '/fetchStockData',
-                    data: { selectedStock: selectedStock, timeframe: timeframe },
+                    data: { selectedStock: selectedStock, 
+                            timeframe: timeframe,
+                            duration:duration
+                    },
                     success: function (response) {
                         console.log(response);
                         updatePlot(response);
@@ -155,18 +158,19 @@
                 event.preventDefault();
             });
     
-            $('#toggleDataButton').on('click', function () {
-                var buttonText = $(this).text().toLowerCase();
-                var newButtonText = buttonText === 'show weekly data' ? 'Show Daily Data' : 'Show Weekly Data';
-                $(this).text(newButtonText);
-    
-                // Perform the AJAX request to get the updated data
+            $('#submitButton').on('click', function () {
                 var selectedStock = $('#selectOption').val();
-                var timeframe = newButtonText.toLowerCase();
+                var timeframe = $('#toggleDataButton').text().toLowerCase();
+                var duration = $('#duration').val() || 1;
+
                 $.ajax({
                     type: 'POST',
                     url: '/fetchStockData',
-                    data: { selectedStock: selectedStock, timeframe: timeframe },
+                    data: {
+                        selectedStock: selectedStock,
+                        timeframe: timeframe,
+                        duration: duration
+                    },
                     success: function (response) {
                         console.log(response);
                         updatePlot(response);
