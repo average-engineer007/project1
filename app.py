@@ -2,16 +2,11 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
-from jugaad_data.nse import stock_df
-import pandas as pd
-import time
-import pickle  
-import pyarrow as pa
-import pyarrow.orc as orc
-import numpy as np 
-import matplotlib.pyplot as plt 
-import os
-import sys
+from dateutil.relativedelta import relativedelta
+from nselib import capital_market
+
+
+curr_date = date.today().strftime("%d-%m-%Y")
 
 app = Flask(__name__)
 app.secret_key = 'just_fafo'  # Replace with your actual secret key
@@ -58,23 +53,18 @@ def login():
     user = User.query.filter_by(username=username).first()
 
     if user and check_password_hash(user.password_hash, password):
-        print("login pased")
         session['user_id'] = user.id
         session['username'] = user.username
-        print(session)
         return redirect(url_for('dashboard'))
     else:
-        print("login failed")
         flash('Invalid username or password')
         return redirect(url_for('index'))
 
 @app.route('/dashboard')
 def dashboard():
     if 'user_id' in session:
-        print(f"User ID in session: {session['user_id']}")
         return render_template('welcome.html', username=session['username'])
     else:
-        print("User ID not in session")
         return redirect(url_for('index'))
 
 @app.route('/logout')
@@ -92,22 +82,31 @@ def used_user_name():
     else:
         return jsonify({'status': 'Username available !!'})
 
+@app.route('/fetchStockData', methods = ['POST'])
+def fetchStockData():
+    symbol = request.form.get('selectedStock')
+    targ_date = date.today() + relativedelta(years=-1)
+    targ_date = targ_date.strftime("%d-%m-%Y")
+    print(f"Symbol received: {symbol}")
+    df = capital_market.price_volume_and_deliverable_position_data(symbol=symbol, from_date=targ_date, to_date=curr_date)
+    print("Data obtained")
+    required_df = df[['Date',
+                    'OpenPrice',
+                    'ClosePrice',
+                    'HighPrice',
+                    'LowPrice']]
+    numeric_columns = ['OpenPrice', 'ClosePrice', 'HighPrice', 'LowPrice']
+    required_df[numeric_columns] = required_df[numeric_columns].replace({',': ''}, regex=True)
+    required_df.to_csv('required.csv')
+    required_df_in_json = df[['Date',
+                            'OpenPrice',
+                            'ClosePrice',
+                            'HighPrice',
+                            'LowPrice']].to_json(orient='split', index=False)
+    data = jsonify(required_df_in_json)
+    print("Data sent")
+
+    return data
+
 if __name__ == '__main__':
-    app.run(debug=True,port=5000)
-
-
-# def process_stock():
-#     selected_stock = request.form.get('selectOption')
-#     # Perform processing on the selected stock
-#     # For example, you can print it to the console
-#     today=date.today()
-#     years=10
-#     print("Selected Stock:", selected_stock)
-#     smbl=selected_stock
-#     df = stock_df(symbol=smbl, from_date=date(today.year-years, today.month, today.day-x), to_date=today, series="EQ")
-#     selected_columns = ['DATE', 'OPEN', 'CLOSE', 'HIGH', 'LOW', 'LTP', 'VOLUME', 'VALUE', 'NO OF TRADES']
-#     data = df[selected_columns]
-#     # Add your processing logic here
-
-#     # Return a response (this is optional)
-#     return "Processing stock: " + selected_stock
+    app.run(debug=True,port=5001)
