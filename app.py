@@ -85,7 +85,11 @@ def used_user_name():
 @app.route('/fetchStockData', methods = ['POST'])
 def fetchStockData():
     symbol = request.form.get('selectedStock')
-    targ_date = date.today() + relativedelta(years=-1)
+    duration = request.form.get('duration')
+    print(request.form)  # Print the entire form data to see if 'duration' is present
+    duration = request.form.get('duration')
+    print("Duration:", duration)  # Print the 'duration' value
+    targ_date = date.today() + relativedelta(years=-1*int(duration))
     targ_date = targ_date.strftime("%d-%m-%Y")
     print(f"Symbol received: {symbol}")
     df = capital_market.price_volume_and_deliverable_position_data(symbol=symbol, from_date=targ_date, to_date=curr_date)
