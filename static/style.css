@@ -1,7 +1,8 @@
 /* style.css */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f2f5d2;
+    background-color: #f8f9f5;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -45,7 +46,7 @@ button {
 
 .welcome-container {
     text-align: center;
-    background-color: white;
+    background-color: rgb(250, 249, 249);
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
@@ -80,29 +81,45 @@ button {
 
 .stocks {
     position: fixed;
-    top: 20%;
+
+    top: 22%;
     right: 0;
-    height: 80%;
+    height: 50%;
     width: 20%;
     box-sizing: border-box;
     padding: 20px;
-    border-radius: 10px;
-    background-color: rgb(235, 235, 243);
-    box-shadow: -2px 0 5px rgba(177, 42, 42, 0.1);
+    border-radius: 8px;
+    background-color: rgb(193, 212, 237);
+    box-shadow: -2px 0 5px rgba(59, 134, 196, 0.1);
+    margin-left: 100px;
+    margin-right: 5px;
+    margin-bottom: 100px;
+    margin-top: 0px;
+
     
 }
 
 .graphs{
     position: fixed;
-    top: 20%;
-    right: 20%; 
-    height: 80%;
-    width: 80%;
-    box-sizing: border-box;
+    top: 5%;
+    right: 40%; 
+    left: 10px;
+    bottom: 10%;
+    height: 600px;
+    width: 75%;
+    /* box-sizing: border-box; */
     padding: 20px;
-    border-radius: 10px;
-    background-color: #171a16;
-    box-shadow: -2px 0 5px rgba(177, 42, 42, 0.1)
+    border-style: solid;
+    border-color: #5f9ed9;
+    border-width: 2px;
+    border-radius: 20px;
+    background-color: #fafbf9;
+    box-shadow: -2px 0 5px rgba(177, 42, 42, 0.1);
+    margin-right: 50px;
+    margin-bottom: 100px;
+
+
+
 }
 
 #plot{
