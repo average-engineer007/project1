@@ -64,9 +64,11 @@
             </select>
             <label for="basis">Select Basis:</label>
             <select id="basis" name="basis">
-                <option value="daily">Daily: Plot the daily data for the stock</option>
+                <option value="1m">Daily: Plot the daily data for the stock (1 min interval)</option>
+                <option value="5m">Daily: Plot the daily data for the stock (5 min interval)</option>
                 <option value="weekly">Weekly: Plot the weekly data for the stock</option>
                 <option value="monthly">Monthly: Plot the monthly data for the stock</option>
+                <option value="yearly">Yearly: Plot the yearly data for the stock</option>
             </select>
             <label for="duration">Enter Duration:</label>
             <input type="number" id="duration" name="duration" min="1" placeholder="Enter number of years/days/weeks">
@@ -102,11 +104,11 @@
             console.log('Received data:', response);
             var data = JSON.parse(response)
             console.log('Parsed data:', data);
-    var dates = data.data.map(entry => entry[0]);
-    var openPrices = data.data.map(entry => entry[1]);;
-    var closePrices = data.data.map(entry => entry[2]);
-    var highPrices = data.data.map(entry => entry[3]);
-    var lowPrices = data.data.map(entry => entry[4]);
+    var dates = data.data.map(entry => entry[1]);
+    var openPrices = data.data.map(entry => entry[2]);;
+    var closePrices = data.data.map(entry => entry[3]);
+    var highPrices = data.data.map(entry => entry[4]);
+    var lowPrices = data.data.map(entry => entry[5]);
     // Create the new plot data
     var newData = [{
         x: dates,
@@ -135,13 +137,34 @@
     
             $('#selectOption').on('change', function () {
                 var selectedStock = $(this).val();
-                var timeframe = $('#toggleDataButton').text().toLowerCase();
+                var basis = $('#basis').val() || 'daily';
                 var duration = $('#duration').val() || 1;
                 $.ajax({
                     type: 'POST',
                     url: '/fetchStockData',
                     data: { selectedStock: selectedStock, 
-                            timeframe: timeframe,
+                            basis: basis,
+                            duration:duration
+                    },
+                    success: function (response) {
+                        console.log(response);
+                        updatePlot(response);
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                });
+            });
+
+            $('#basis').on('change', function () {
+                var selectedStock = $('#selectOption').val();
+                var basis = $(this).val() || 'daily';
+                var duration = $('#duration').val() || 1;
+                $.ajax({
+                    type: 'POST',
+                    url: '/fetchStockData',
+                    data: { selectedStock: selectedStock, 
+                            basis: basis,
                             duration:duration
                     },
                     success: function (response) {
@@ -160,7 +183,7 @@
     
             $('#submitButton').on('click', function () {
                 var selectedStock = $('#selectOption').val();
-                var timeframe = $('#toggleDataButton').text().toLowerCase();
+                var basis = $('#basis').val() || 'daily';
                 var duration = $('#duration').val() || 1;
 
                 $.ajax({
@@ -168,7 +191,7 @@
                     url: '/fetchStockData',
                     data: {
                         selectedStock: selectedStock,
-                        timeframe: timeframe,
+                        basis: basis,
                         duration: duration
                     },
                     success: function (response) {

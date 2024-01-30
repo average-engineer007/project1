@@ -3,10 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import date
 from dateutil.relativedelta import relativedelta
-from nselib import capital_market
+import pandas as pd
+import yfinance as yf
+from datetime import datetime, timedelta
 
 
-curr_date = date.today().strftime("%d-%m-%Y")
+
+curr_date = datetime.today().strftime('%Y-%m-%d')
 
 app = Flask(__name__)
 app.secret_key = 'just_fafo'  # Replace with your actual secret key
@@ -81,36 +84,87 @@ def used_user_name():
         return jsonify({'status': 'Username already taken !!'})
     else:
         return jsonify({'status': 'Username available !!'})
+    
+def get_intraday_stock_data(symbol, duration, interval, has_time, monthly=False):
+    # Calculate the start and end dates for the data
+    if not monthly:
+        targ_date = (datetime.today() - timedelta(days=duration)).strftime('%Y-%m-%d')
+        print("mounthly")
+    else:
+        targ_date = (datetime.today() - relativedelta(months=duration)).strftime('%Y-%m-%d')
+    print("Tasrget Date: ",targ_date)
+    # Fetch intraday data using yfinance
+    data = yf.download(symbol, start=targ_date, end=curr_date, interval=interval)
+    data = data.reset_index()
+    if(has_time):
+        data.rename(columns = {'Datetime':'Date'}, inplace=True)
+    return data
 
-@app.route('/fetchStockData', methods = ['POST'])
+
+
+@app.route('/fetchStockData', methods=['POST'])
 def fetchStockData():
-    symbol = request.form.get('selectedStock')
-    duration = request.form.get('duration')
-    print(request.form)  # Print the entire form data to see if 'duration' is present
-    duration = request.form.get('duration')
-    print("Duration:", duration)  # Print the 'duration' value
-    targ_date = date.today() + relativedelta(years=-1*int(duration))
-    targ_date = targ_date.strftime("%d-%m-%Y")
+    symbol = request.form.get('selectedStock')+".NS"
+    basis = request.form.get('basis')
+    duration = int(request.form.get('duration'))
+    print("Duration:", duration)
+    print("Basis: ", basis)
     print(f"Symbol received: {symbol}")
-    df = capital_market.price_volume_and_deliverable_position_data(symbol=symbol, from_date=targ_date, to_date=curr_date)
-    print("Data obtained")
-    required_df = df[['Date',
-                    'OpenPrice',
-                    'ClosePrice',
-                    'HighPrice',
-                    'LowPrice']]
-    numeric_columns = ['OpenPrice', 'ClosePrice', 'HighPrice', 'LowPrice']
-    required_df[numeric_columns] = required_df[numeric_columns].replace({',': ''}, regex=True)
-    required_df.to_csv('required.csv')
-    required_df_in_json = df[['Date',
-                            'OpenPrice',
-                            'ClosePrice',
-                            'HighPrice',
-                            'LowPrice']].to_json(orient='split', index=False)
-    data = jsonify(required_df_in_json)
+
+    # Fetch intraday data using yfinance
+    if basis == "1m":
+        df = get_intraday_stock_data(symbol, duration, "1m", True)
+    elif basis == "5m":
+        df = get_intraday_stock_data(symbol, duration, "5m", True)
+    elif basis == "weekly":
+        df = get_intraday_stock_data(symbol, (duration*7), "1d" , False)
+    elif basis == "monthly":
+        df = get_intraday_stock_data(symbol, duration, "1d", False, True)
+    elif basis == "yearly":
+        df = get_intraday_stock_data(symbol, 12*duration, "1d", False, True)
+        
+    # Check the actual column names of the DataFrame
+    print("Actual Column Names:", df.columns)
+
+    # Reset index to turn the timestamp index into a regular column
+
+    print("Actual Column Names:", df.columns)
+    if 'Date' in df.columns:
+        # Convert timestamp to string for JSON serialization
+        df['FormattedDatetime'] = df['Date'].dt.strftime('%Y-%m-%d %H:%M:%S')
+    else:
+        # If 'Date' is not present, use the existing timestamp column
+        df['FormattedDatetime'] = df[df.columns[0]].dt.strftime('%Y-%m-%d %H:%M:%S')
+
+    # Extract required columns and handle any data type conversion or cleanup
+    required_df = df[['Date', 'FormattedDatetime', 'Open', 'Close', 'High', 'Low']]
+    # Convert timestamp to string for JSON serialization if the 'Date' column exists
+    # Convert timestamp to string for JSON serialization if the 'Date' column exists
+    # Convert timestamp to string for JSON serialization if the 'Date' column exists
+    if 'Date' in required_df.columns:
+        datetime_column = required_df['Date']
+        # Check if the values are integers (Unix timestamps)
+        if pd.api.types.is_integer_dtype(datetime_column):
+            required_df['Date'] = pd.to_datetime(datetime_column, unit='ms')
+        # If the values are already strings, assume they are in the desired format
+        elif pd.api.types.is_string_dtype(datetime_column):
+            required_df['Date'] = pd.to_datetime(datetime_column)
+
+        # Format 'Date' column to a human-readable format
+        required_df['FormattedDatetime'] = required_df['Date'].dt.strftime('%Y-%m-%d %H:%M:%S')
+
+    # Drop unnecessary columns for JSON conversion
+    required_df_for_json = required_df[['Date', 'FormattedDatetime', 'Open', 'Close', 'High', 'Low']]
+    print(required_df)
+    # Convert DataFrame to JSON
+    json_data = required_df_for_json.to_json(orient='split', index=False, date_format='iso')
+    data = jsonify(json_data)
     print("Data sent")
 
     return data
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True,port=5001)
