@@ -104,7 +104,8 @@ def get_intraday_stock_data(symbol, duration, interval, has_time, monthly=False)
 
 @app.route('/fetchStockData', methods=['POST'])
 def fetchStockData():
-    symbol = request.form.get('selectedStock')+".NS"
+    print(request.form)
+    symbol = request.form.get('selectedStock[]')+".NS"
     basis = request.form.get('basis')
     duration = int(request.form.get('duration'))
     print("Duration:", duration)
