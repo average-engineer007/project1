@@ -2,6 +2,11 @@
 <html>
 <head>
     <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css?family=Overpass+Mono" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='sellect.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='demo.css') }}">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page </title>
     
@@ -13,7 +18,10 @@
       <form id="stockSelect" action="/fetchStockData" method="POST">  
         <div class="stocks">
             <label for ="selectOption"> Select a Stock to Explore:</label>
+
+            <input type="text" id="my-element">
             <select id="selectOption" name ="selectedStock" multiple>
+            
                 <option value="ADANIENT">Adani Enterprises Ltd.</option>
                 <option value="ADANIPORTS">Adani Ports and Special Economic Zone Ltd.</option>
                 <option value="APOLLOHOSP">Apollo Hospitals Enterprise Ltd.</option>
@@ -110,6 +118,30 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script>
+        function myFunction() {
+            document.getElementById("myDropdown").classList.toggle("show");
+            }
+
+        function filterFunction() {
+        var input, filter, ul, li, a, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        div = document.getElementById("myDropdown");
+        a = div.getElementsByTagName("a");
+        for (i = 0; i < a.length; i++) {
+            txtValue = a[i].textContent || a[i].innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            a[i].style.display = "";
+            } else {
+            a[i].style.display = "none";
+            }
+        }
+        }
+
+
+
+
+
         // Sample weekly data for initial plot
         var sampleData = {
             Date: ['2022-01-03', '2022-01-04', '2022-01-05', '2022-01-06', '2022-01-07'],
@@ -324,6 +356,99 @@ function updatePlot(response) {
             window.addEventListener('load', updatePlotSize);
         });
     </script>
+
+<script src="{{ url_for('static', filename='sellect.js') }}"></script>
+
+<script>
+    var mySellect = sellect("#my-element", {
+        originList: [
+        'Adani Enterprises Ltd.',
+        'Adani Ports and Special Economic Zone Ltd.',
+        'Apollo Hospitals Enterprise Ltd.',
+        'Asian Paints Ltd.',
+        'Axis Bank Ltd.',
+        'Bajaj Auto Ltd.',
+        'Bajaj Finance Ltd.',
+        'Bajaj Finserv Ltd.',
+        'Bharat Petroleum Corporation Ltd.',
+        'Bharti Airtel Ltd.',
+        'Britannia Industries Ltd.',
+        'Cipla Ltd.',
+        'Coal India Ltd.',
+        'Divi\'s Laboratories Ltd.',
+        'Dr. Reddy\'s Laboratories Ltd.',
+        'Eicher Motors Ltd.',
+        'Grasim Industries Ltd.',
+        'HCL Technologies Ltd.',
+        'HDFC Bank Ltd.',
+        'HDFC Life Insurance Company Ltd.',
+        'Hero MotoCorp Ltd.',
+        'Hindalco Industries Ltd.',
+        'Hindustan Unilever Ltd.',
+        'ICICI Bank Ltd.',
+        'ITC Ltd.',
+        'IndusInd Bank Ltd.',
+        'Infosys Ltd.',
+        'JSW Steel Ltd.',
+        'Kotak Mahindra Bank Ltd.',
+        'Larsen & Toubro Ltd.',
+        'Maruti Suzuki India Ltd.',
+        'NTPC Ltd.',
+        'Nestle India Ltd.',
+        'Oil & Natural Gas Corporation Ltd.',
+        'Power Grid Corporation of India Ltd.',
+        'Reliance Industries Ltd.',
+        'SBI Life Insurance Company Ltd.',
+        'State Bank of India',
+        'Sun Pharmaceutical Industries Ltd.',
+        'Tata Consultancy Services Ltd.',
+        'Tata Consumer Products Ltd.',
+        'Tata Motors Ltd.',
+        'Tata Steel Ltd.',
+        'Tech Mahindra Ltd.',
+        'Titan Company Ltd.',
+        'UPL Ltd.',
+        'UltraTech Cement Ltd.',
+        'Wipro Ltd.'
+    ],
+        // destinationList: ['banana', 'papaya', 'grape', 'orange', 'guava'],
+        onInsert: updateDemoLists,
+        onRemove: updateDemoLists
+    });
+
+    mySellect.init();
+
+    // demo code to return lists
+    function updateDemoLists(event, item) {
+        var selectedList = document.getElementById('selected-list');
+        var unselectedList = document.getElementById('unselected-list');
+        var selectedArr;
+        var unselectedArr;
+
+        while (selectedList.firstChild) {
+            selectedList.removeChild(selectedList.firstChild);
+        }
+
+        while (unselectedList.firstChild) {
+            unselectedList.removeChild(unselectedList.firstChild);
+        }
+
+        selectedArr = mySellect.getSelected();
+        unselectedArr = mySellect.getUnselected();
+
+        selectedArr.forEach(function (item, index, arr){
+            var span = document.createElement('span');
+            span.innerText = item;
+            selectedList.appendChild(span);
+        });
+
+        unselectedArr.forEach(function (item, index, arr){
+            var span = document.createElement('span');
+            span.innerText = item;
+            unselectedList.appendChild(span);
+        });
+    }
+</script>
     
     
     
