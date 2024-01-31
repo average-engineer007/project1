@@ -62,6 +62,25 @@
                 <option value="ULTRACEMCO">UltraTech Cement Ltd.</option>
                 <option value="WIPRO">Wipro Ltd.</option>
             </select>
+            <div id="checkboxContainer">
+                <div class="checkboxRow">
+                    <label for="dataSeries">Select Data Series:</label>
+                </div>
+                <div class="checkboxRow">
+                    <input type="checkbox" id="openSeries" name="dataSeries" value="open" checked>
+                    <label for="openSeries">Open</label>
+            
+                    <input type="checkbox" id="closeSeries" name="dataSeries" value="close" checked>
+                    <label for="closeSeries">Close</label>
+            
+                    <input type="checkbox" id="highSeries" name="dataSeries" value="high" checked>
+                    <label for="highSeries">High</label>
+            
+                    <input type="checkbox" id="lowSeries" name="dataSeries" value="low" checked>
+                    <label for="lowSeries">Low</label>
+                </div>
+            </div>
+
             <label for="basis">Select Basis:</label>
             <select id="basis" name="basis">
                 <option value="1m">Daily: Plot the daily data for the stock (1 min interval)</option>
@@ -77,6 +96,9 @@
     </form>
     <div class ="graphs">
         <div id="plot"></div>
+    </div>
+    <div id="loadingOverlay">
+        <div id="loadingText">Loading...</div>
     </div>
     
     <script>
@@ -104,26 +126,69 @@
             console.log('Received data:', response);
             var data = JSON.parse(response)
             console.log('Parsed data:', data);
-    var dates = data.data.map(entry => entry[1]);
-    var openPrices = data.data.map(entry => entry[2]);;
-    var closePrices = data.data.map(entry => entry[3]);
-    var highPrices = data.data.map(entry => entry[4]);
-    var lowPrices = data.data.map(entry => entry[5]);
-    // Create the new plot data
-    var newData = [{
-        x: dates,
-        close: closePrices,
-        open: openPrices,
-        high: highPrices,
-        low: lowPrices,
-        type: 'candlestick',
-        name: 'Stock Prices'
-    }];
+            var dates = data.data.map(entry => entry[1]);
+            
+            var openCheckbox = $('#openSeries').prop('checked');
+            var closeCheckbox = $('#closeSeries').prop('checked');
+            var highCheckbox = $('#highSeries').prop('checked');
+            var lowCheckbox = $('#lowSeries').prop('checked');
+            
+            var plotType = '';
+            if(openCheckbox && closeCheckbox && highCheckbox && lowCheckbox){
+                plotType = 'candlestick';
+            }else {
+                plotType = 'scatter';
+                var plotData = [];
+                if (openCheckbox){
+                    var openPrices = data.data.map(entry => entry[2])
+                    plotData.push({
+                        x: dates,
+                        y: openPrices,
+                        mode: 'lines',
+                        name: 'open'
+                    });
+                }
+                if (closeCheckbox){
+                    var closePrices = data.data.map(entry => entry[3])
+                    plotData.push({
+                        x: dates,
+                        y: closePrices,
+                        mode: 'lines',
+                        name: 'close'
+                    });
+                }
+                if (highCheckbox){
+                    var highPrices = data.data.map(entry => entry[4])
+                    plotData.push({
+                        x: dates,
+                        y: highPrices,
+                        mode: 'lines',
+                        name: 'high'
+                    });
+                }
+                if (lowCheckbox){
+                    var lowPrices = data.data.map(entry => entry[5])
+                    plotData.push({
+                        x: dates,
+                        y: lowPrices,
+                        mode: 'lines',
+                        name: 'low'
+                    });
+                }
+                Plotly.newPlot('plot', plotData, layout);
+                return;
+            }
 
-    console.log('New data for plot:', newData);
-
-    // Plot the data
-    Plotly.newPlot('plot', newData, layout);
+            var candleStickData = [{
+                x: dates,
+                close: data.data.map(entry => entry[3]), // Close prices
+                open: data.data.map(entry => entry[2]),  // Open prices
+                high: data.data.map(entry => entry[4]),  // High prices
+                low: data.data.map(entry => entry[5]),   // Low prices
+                type: plotType,
+                name: 'Stock Prices'
+            }];
+            Plotly.newPlot('plot', candleStickData, layout);
 }
 
 
@@ -134,7 +199,14 @@
             // Initial plot with sample data
             // Initial plot with sample data
 
-    
+            $(document).ajaxStart(function () {
+                $('#loadingOverlay').show();
+            });
+
+            $(document).ajaxStop(function () {
+                $('#loadingOverlay').hide();
+            });
+
             $('#selectOption').on('change', function () {
                 var selectedStock = $(this).val();
                 var basis = $('#basis').val() || 'daily';
