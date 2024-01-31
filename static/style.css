@@ -1,7 +1,7 @@
 /* style.css */
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f8f9f5;
+    background-color: white;
 
     display: flex;
     justify-content: center;
@@ -9,10 +9,15 @@ body {
     height: 100vh;
     margin: 0;
 }
-
+.register{
+    color: white;
+}
+.register a{
+    color: #c77a7a;
+}
 .login-container {
-    background-color: rgb(177, 36, 36);
-    padding: 40px;
+    background-color: rgb(33, 9, 9);
+    padding: 4000px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     width: 300px;
@@ -20,17 +25,26 @@ body {
 
 .login-container h2 {
     text-align: center;
+    color: white;
     margin-bottom: 20px;
 }
-
+.form-group{
+    background-color: white;
+}
+h2{
+    color: white;
+}
 .form-group {
     margin-bottom: 15px;
+}
+.form-container{
+    margin-bottom: 200px;
 }
 
 input[type="text"], input[type="password"] {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid #ffffff;
     border-radius: 5px;
     box-sizing: border-box;
 }
@@ -46,7 +60,7 @@ button {
 
 .welcome-container {
     text-align: center;
-    background-color: rgb(250, 249, 249);
+    background-color:white;
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);

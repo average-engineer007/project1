@@ -7,7 +7,7 @@
 <body>
     <style>
         body {
-            background-image: url("project1/static/istockphoto-1416020122-170667a.jpng");
+            background-image: url("{{ url_for('static', filename='5072609.jpg') }}");
             background-size: cover; /* Adjust this property based on your preference */
             /* Add other styling as needed */
         }
@@ -25,7 +25,7 @@
                 <button type="submit">Login</button>
             </div>
         </form>
-        <p>Don't have an account? <a href="/register">Register here</a></p>
+        <p class="register">Don't have an account? <a href="/register">Register here</a></p>
     </div>
 </body>
 </html>
