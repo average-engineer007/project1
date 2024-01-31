@@ -198,3 +198,57 @@ select{
   .dropdown a:hover {background-color: #ddd;}
   
   .show {display: block;}
+
+#loadingOverlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
+}
+
+#loadingText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+}
+
+
+#checkboxContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.checkboxRow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 5px; /* Adjust the margin as needed */
+}
+
+.checkboxRow label {
+    margin-right: 10px;
+    display: block;
+}
+
+/* Move the checkbox styles outside the media query */
+.checkboxRow input {
+    margin-top: 5px; /* Adjust the margin as needed */
+}
+
+@media (max-width: 600px) {
+    .checkboxRow label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .checkboxRow input {
+        margin-top: 5px; /* Adjust the margin as needed */
+    }
+}
