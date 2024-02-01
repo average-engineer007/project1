@@ -16,71 +16,420 @@
 </head>
 <body>
 
-    <div id="selected-list"></div>
-    <div id="unselected-list"></div>
-      <form id="stockSelect" action="/fetchStockData" method="POST">  
-        <div class="stocks">
-            <label for ="selectOption"> Select a Stock to Explore:</label>
-
-            <input type="text" id="my-element">
-           
-
-            <div id="checkboxContainer">
-                <div class="checkboxRow">
-                    <label for="dataSeries">Select Data Series:</label>
-                </div>
-                <div class="checkboxRow">
-                    <input type="checkbox" id="openSeries" name="dataSeries" value="open" checked>
-                    <label for="openSeries">Open</label>
-            
-                    <input type="checkbox" id="closeSeries" name="dataSeries" value="close" checked>
-                    <label for="closeSeries">Close</label>
-            
-                    <input type="checkbox" id="highSeries" name="dataSeries" value="high" checked>
-                    <label for="highSeries">High</label>
-            
-                    <input type="checkbox" id="lowSeries" name="dataSeries" value="low" checked>
-                    <label for="lowSeries">Low</label>
-                </div>
-            </div>
-
-            <label for="basis">Select Basis:</label>
-            <select id="basis" name="basis">
-                <option value="1m">Daily: Plot the daily data for the stock (1 min interval)</option>
-                <option value="5m">Daily: Plot the daily data for the stock (5 min interval)</option>
-                <option value="weekly">Weekly: Plot the weekly data for the stock</option>
-                <option value="monthly">Monthly: Plot the monthly data for the stock</option>
-                <option value="yearly">Yearly: Plot the yearly data for the stock</option>
-            </select>
-            <label for="duration">Enter Duration:</label>
-            <input type="number" id="duration" name="duration" min="1" placeholder="Enter number of years/days/weeks">
-            <button id="submitButton" type="submit">Submit</button>
-        </div>
-    </form>
-    <div class ="graphs">
-        <div id="plot"></div>
+    <form id="stockSelect" action="/fetchStockData" method="POST">  
+      <div class="stocks">
+          <label for ="selectOption"> Select a Stock to Explore:</label>
+  
+          <input type="text" id="my-element">
+          <!-- <div id="selectedStocks">
+              <p>Selected Stocks:</p>
+              <ul id="selectedStockList" class="nav nav-tabs"></ul>
+          </div> -->
+  
+          <div id="checkboxContainer">
+              <div class="checkboxRow">
+                  <label for="dataSeries">Select Data Series:</label>
+              </div>
+              <div class="checkboxRow">
+                  <input type="checkbox" id="openSeries" name="dataSeries" value="open" checked>
+                  <label for="openSeries">Open</label>
+          
+                  <input type="checkbox" id="closeSeries" name="dataSeries" value="close" checked>
+                  <label for="closeSeries">Close</label>
+          
+                  <input type="checkbox" id="highSeries" name="dataSeries" value="high" checked>
+                  <label for="highSeries">High</label>
+          
+                  <input type="checkbox" id="lowSeries" name="dataSeries" value="low" checked>
+                  <label for="lowSeries">Low</label>
+              </div>
+          </div>
+  
+          <label for="basis">Select Basis:</label>
+          <select id="basis" name="basis">
+              <option value="1m">Daily: Plot the daily data for the stock (1 min interval)</option>
+              <option value="5m">Daily: Plot the daily data for the stock (5 min interval)</option>
+              <option value="weekly">Weekly: Plot the weekly data for the stock</option>
+              <option value="monthly">Monthly: Plot the monthly data for the stock</option>
+              <option value="yearly">Yearly: Plot the yearly data for the stock</option>
+          </select>
+          <label for="duration">Enter Duration:</label>
+          <input type="number" id="duration" name="duration" min="1" placeholder="Enter number of years/days/weeks">
+          <!-- <button id="toggleDataButton" type="button">Plot</button> -->
+          
+  
+          <label for="basis">Select Basis:</label>
+      <select id="basis" name="basis">
+          <option value="">Select...</option>
+          <option value="averagePrice">Average Price</option>
+          <!-- Add more options as needed -->
+      </select>
+  
+      <!-- New field for entering a number -->
+      <div id="filterOptions">
+          <label for="filterValue">Enter Filter Value:</label>
+          <input type="number" id="filterValue" name="filterValue" min="1" placeholder="Enter filter value">
+      </div>
+  
+  
+  
+  
+          <button id="submitButton" type="submit">Submit</button>
+      </div>
+  </form>
+  <div class ="graphs">
+    <div class="header">
+      <h1>Bunteye</h1>
     </div>
-    <div id="loadingOverlay">
-        <div id="loadingText">Loading...</div>
-    </div>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-    <script>
-        function myFunction() {
-            document.getElementById("myDropdown").classList.toggle("show");
-            }
-
-        function filterFunction() {
-        var input, filter, ul, li, a, i;
-        input = document.getElementById("myInput");
-        filter = input.value.toUpperCase();
-        div = document.getElementById("myDropdown");
-        a = div.getElementsByTagName("a");
-        for (i = 0; i < a.length; i++) {
-            txtValue = a[i].textContent || a[i].innerText;
-            if (txtValue.toUpperCase().indexOf(filter) > -1) {
-            a[i].style.display = "";
+      <div class="plot"></div>
+  </div>
+  <div id="loadingOverlay">
+      <div id="loadingText">Loading...</div>
+  </div>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <script>
+      function myFunction() {
+          document.getElementById("myDropdown").classList.toggle("show");
+          }
+  
+      function filterFunction() {
+      var input, filter, ul, li, a, i;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      div = document.getElementById("myDropdown");
+      a = div.getElementsByTagName("a");
+      for (i = 0; i < a.length; i++) {
+          txtValue = a[i].textContent || a[i].innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          a[i].style.display = "";
+          } else {
+          a[i].style.display = "none";
+          }
+      }
+      }
+  
+  
+  
+  
+  
+      // Sample weekly data for initial plot
+      var sampleData = {
+          Date: ['2022-01-03', '2022-01-04', '2022-01-05', '2022-01-06', '2022-01-07'],
+          OpenPrice: [100, 105, 98, 102, 110],
+          ClosePrice: [102, 100, 105, 108, 115],
+          HighPrice: [105, 110, 108, 112, 118],
+          LowPrice: [98, 100, 96, 100, 108]
+      };
+  
+      var layout = {
+          title: 'Stock Prices',
+          hovermode: 'closest',
+          xaxis: {
+              title: 'Date'
+          },
+          yaxis: {
+              title: 'Stock Price'
+          }
+      };
+  
+  var allStockData = [];
+  
+  function updatePlot(response) {
+  console.log('Received data:', response);
+  var data = JSON.parse(response);
+  console.log('Parsed data:', data);
+  var dates = data.data.map(entry => entry[1]);
+  
+  var openCheckbox = $('#openSeries').prop('checked');
+  var closeCheckbox = $('#closeSeries').prop('checked');
+  var highCheckbox = $('#highSeries').prop('checked');
+  var lowCheckbox = $('#lowSeries').prop('checked');
+  
+  var plotData = [];
+  
+  if (openCheckbox) {
+      plotData.push({
+          x: dates,
+          y: data.data.map(entry => entry[2]),
+          mode: 'lines',
+          name: 'Open'
+      });
+  }
+  
+  if (closeCheckbox) {
+      plotData.push({
+          x: dates,
+          y: data.data.map(entry => entry[3]),
+          mode: 'lines',
+          name: 'Close'
+      });
+  }
+  
+  if (highCheckbox) {
+      plotData.push({
+          x: dates,
+          y: data.data.map(entry => entry[4]),
+          mode: 'lines',
+          name: 'High'
+      });
+  }
+  
+  if (lowCheckbox) {
+      plotData.push({
+          x: dates,
+          y: data.data.map(entry => entry[5]),
+          mode: 'lines',
+          name: 'Low'
+      });
+  }
+  
+  var layout = {
+      title: 'Stock Prices',
+      hovermode: 'closest',
+      xaxis: {
+          title: 'Date'
+      },
+      yaxis: {
+          title: 'Stock Price'
+      }
+  };
+  
+  var plotType = 'scatter';
+  
+  if (openCheckbox && closeCheckbox && highCheckbox && lowCheckbox) {
+      plotType = 'candlestick';
+      plotData = [{
+          x: dates,
+          close: data.data.map(entry => entry[3]),
+          open: data.data.map(entry => entry[2]),
+          high: data.data.map(entry => entry[4]),
+          low: data.data.map(entry => entry[5]),
+          type: 'candlestick',
+          name: 'Stock Prices'
+      }];
+  }
+  
+  Plotly.newPlot('plot', plotData, layout);
+  }
+  
+  
+  
+  
+      $(document).ready(function () {
+          // Initial plot with sample data
+          // Initial plot with sample data
+  
+          $(document).ajaxStart(function () {
+              $('#loadingOverlay').show();
+          });
+  
+          $(document).ajaxStop(function () {
+              $('#loadingOverlay').hide();
+          });
+  
+          $('#selectOption').on('change', function () {
+              var selectedStock = $(this).val(); // This should give an array of selected values
+  
+              if (selectedStock && selectedStock.length > 0) {
+                  selectedStock.forEach(function (stock) {
+                      $('#selectedStockList').append('<li>' + stock + '</li>');
+                  });
+  
+                  var basis = $('#basis').val() || 'daily';
+                  var duration = $('#duration').val() || 1;
+                  $.ajax({
+                      type: 'POST',
+                      url: '/fetchStockData',
+                      data: {
+                          selectedStock: selectedStock, 
+                          basis: basis,
+                          duration: duration
+                      },
+                      success: function (response) {
+                          console.log(response);
+                          updatePlot(response);
+                      },
+                      error: function (error) {
+                          console.error(error);
+                          console.log('HI, I am executed')
+                      }
+                  });
+              } else {
+                  console.log("No stock selected"); // Handle this case as needed
+              }
+          });
+  
+  
+          $('#basis').on('change', function () {
+              var selectedStock = $('#selectOption').val();
+              var basis = $(this).val() || 'daily';
+              var duration = $('#duration').val() || 1;
+              $.ajax({
+                  type: 'POST',
+                  url: '/fetchStockData',
+                  data: { selectedStock: selectedStock, 
+                          basis: basis,
+                          duration:duration
+                  },
+                  success: function (response) {
+                      console.log(response);
+                      updatePlot(response);
+                  },
+                  error: function (error) {
+                      console.error(error);
+                  }
+              });
+          });
+  
+          $('#stockSelect').on('submit', function (event) {
+              event.preventDefault();
+          });
+  
+          $('#submitButton').on('click', function () {
+              var selectedStock = $('#selectOption').val();
+              var basis = $('#basis').val() || 'daily';
+              var duration = $('#duration').val() || 1;
+  
+              $.ajax({
+                  type: 'POST',
+                  url: '/fetchStockData',
+                  data: {
+                      selectedStock: selectedStock,
+                      basis: basis,
+                      duration: duration
+                  },
+                  success: function (response) {
+                      console.log(response);
+                      updatePlot(response);
+                  },
+                  error: function (error) {
+                      console.error(error);
+                  }
+              });
+          });
+  
+          function updatePlotSize() {
+              var container = document.getElementById('plot');
+              var newWidth = window.innerWidth * 0.75;
+              var newHeight = window.innerHeight * 0.75;
+              var newPadding = 20;
+              container.style.width = newWidth + 'px';
+              container.style.height = newHeight + 'px';
+  
+              Plotly.relayout('plot', {
+                  width: newWidth - (2 * newPadding),
+                  height: newHeight - (2 * newPadding)
+              });
+          }
+  
+          window.addEventListener('resize', updatePlotSize);
+          window.addEventListener('load', updatePlotSize);
+      });
+  </script>
+  
+  <script src="{{ url_for('static', filename='sellect.js') }}"></script>
+  
+  <script>
+  var mySellect = sellect("#my-element", {
+      originList: [
+      'Adani Enterprises Ltd.',
+      'Adani Ports and Special Economic Zone Ltd.',
+      'Apollo Hospitals Enterprise Ltd.',
+      'Asian Paints Ltd.',
+      'Axis Bank Ltd.',
+      'Bajaj Auto Ltd.',
+      'Bajaj Finance Ltd.',
+      'Bajaj Finserv Ltd.',
+      'Bharat Petroleum Corporation Ltd.',
+      'Bharti Airtel Ltd.',
+      'Britannia Industries Ltd.',
+      'Cipla Ltd.',
+      'Coal India Ltd.',
+      'Divi\'s Laboratories Ltd.',
+      'Dr. Reddy\'s Laboratories Ltd.',
+      'Eicher Motors Ltd.',
+      'Grasim Industries Ltd.',
+      'HCL Technologies Ltd.',
+      'HDFC Bank Ltd.',
+      'HDFC Life Insurance Company Ltd.',
+      'Hero MotoCorp Ltd.',
+      'Hindalco Industries Ltd.',
+      'Hindustan Unilever Ltd.',
+      'ICICI Bank Ltd.',
+      'ITC Ltd.',
+      'IndusInd Bank Ltd.',
+      'Infosys Ltd.',
+      'JSW Steel Ltd.',
+      'Kotak Mahindra Bank Ltd.',
+      'Larsen & Toubro Ltd.',
+      'Maruti Suzuki India Ltd.',
+      'NTPC Ltd.',
+      'Nestle India Ltd.',
+      'Oil & Natural Gas Corporation Ltd.',
+      'Power Grid Corporation of India Ltd.',
+      'Reliance Industries Ltd.',
+      'SBI Life Insurance Company Ltd.',
+      'State Bank of India',
+      'Sun Pharmaceutical Industries Ltd.',
+      'Tata Consultancy Services Ltd.',
+      'Tata Consumer Products Ltd.',
+      'Tata Motors Ltd.',
+      'Tata Steel Ltd.',
+      'Tech Mahindra Ltd.',
+      'Titan Company Ltd.',
+      'UPL Ltd.',
+      'UltraTech Cement Ltd.',
+      'Wipro Ltd.'
+  ],
+      // destinationList: ['banana', 'papaya', 'grape', 'orange', 'guava'],
+      onInsert: updateDemoLists,
+      onRemove: updateDemoLists
+  });
+  
+  mySellect.init();
+  
+  // demo code to return lists
+  function updateDemoLists(event, item) {
+      var selectedList = document.getElementById('selected-list');
+      var unselectedList = document.getElementById('unselected-list');
+      var selectedArr;
+      var unselectedArr;
+  
+      while (selectedList.firstChild) {
+          selectedList.removeChild(selectedList.firstChild);
+      }
+  
+      while (unselectedList.firstChild) {
+          unselectedList.removeChild(unselectedList.firstChild);
+      }
+  
+      selectedArr = mySellect.getSelected();
+      unselectedArr = mySellect.getUnselected();
+  
+      selectedArr.forEach(function (item, index, arr){
+          var span = document.createElement('span');
+          span.innerText = item;
+          selectedList.appendChild(span);
+      });
+  
+      unselectedArr.forEach(function (item, index, arr){
+          var span = document.createElement('span');
+          span.innerText = item;
+          unselectedList.appendChild(span);
+      });
+  }
+  </script>
+  
+  <script>
+    $(document).ready(function () {
+        $('#basis').on('change', function () {
+            var selectedBasis = $(this).val();
+            if (selectedBasis === 'averagePrice') {
+                $('#filterOptions').show();
             } else {
+
+                $('#filterOptions').hide();
             a[i].style.display = "none";
             }
         }
@@ -267,10 +616,8 @@ function updatePlot(response) {
                     height: newHeight - (2 * newPadding)
                 });
             }
-    
-            window.addEventListener('resize', updatePlotSize);
-            window.addEventListener('load', updatePlotSize);
         });
+
     </script>
 
 <script src="{{ url_for('static', filename='sellect.js') }}"></script>
@@ -305,3 +652,4 @@ function updatePlot(response) {
 
 </body>
 </html>
+
