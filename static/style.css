@@ -1,5 +1,5 @@
 /* style.css */
-/* body {
+body {
     font-family: 'Arial', sans-serif;
     background-color: #f8f9f5;
 
@@ -8,16 +8,11 @@
     align-items: center;
     height: 100vh;
     margin: 0;
-} */
-.register{
-    color: white;
 }
-.register a{
-    color: #c77a7a;
-}
+
 .login-container {
-    background-color: rgb(33, 9, 9);
-    padding: 4000px;
+    background-color: rgb(177, 36, 36);
+    padding: 40px;
     border-radius: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
     width: 300px;
@@ -25,17 +20,11 @@
 
 .login-container h2 {
     text-align: center;
-    color: white;
     margin-bottom: 20px;
 }
-h2{
-    color: white;
-}
+
 .form-group {
     margin-bottom: 15px;
-}
-.form-container{
-    margin-bottom: 200px;
 }
 
 input[type="text"], input[type="password"] {
@@ -90,7 +79,6 @@ button {
 }
 
 
-/* 
 .stocks {
     position: fixed;
 
@@ -119,7 +107,7 @@ button {
     bottom: 10%;
     height: 600px;
     width: 75%;
-
+    /* box-sizing: border-box; */
     padding: 20px;
     border-style: solid;
     border-color: #5f9ed9;
@@ -137,12 +125,13 @@ button {
 #plot{
     height :100%;
     width : 100%;
+    /* margin: 0 auto; */
     box-sizing: border-box;
     padding-left: 10px;
     padding-bottom: 10px;
     padding-right: 10px;
     padding-top: 10px;
-}*/
+}
 
 label
 {
@@ -184,174 +173,82 @@ select{
   
   #myInput:focus {outline: 3px solid #ddd;}
   
-
-  /* style.css */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* height: 100vh; */
-    margin: 0;
-}
-
-/* .stocks {
-    position: fixed;
-    left: 0; 
-    height: 1000%; 
-    width: 30%; 
-    padding: 20px;
-    border-radius: 8px;
-    background-color: rgb(193, 212, 237);
-    box-shadow: -2px 0 5px rgba(59, 134, 196, 0.1);
-    margin-left: 0px;
-    margin-right: 5px;
-    margin-bottom: px;
-    margin-top: -10px;
-} */
-
-/* Add this to your existing style.css or create a new section for stocks styling */
-.stocks {
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100%; 
-    width: 30%;
-    padding: 20px;
-    /* border-radius: 8px; */
-    background-color: rgb(193, 212, 237);
-    box-shadow: -2px 0 5px rgba(59, 134, 196, 0.1);
-    margin: 0;
-    overflow-y: auto; /* Add scrollbar if content overflows */
-    z-index: 1; /* Ensure stocks section is above other elements */
-}
-
-.stocks label {
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f6f6f6;
+    min-width: 230px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    z-index: 1;
+  }
+  
+  .dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
     display: block;
-    margin-bottom: 8px;
-    font-size: 14px;
-    color: #333;
-}
+  }
+  
+  .dropdown a:hover {background-color: #ddd;}
+  
+  .show {display: block;}
 
-.stocks input[type="text"],
-.stocks select,
-.stocks input[type="number"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-}
-
-/* Add this to your existing style.css or create a new section for stocks styling */
-.stocks button {
-    width: 100%;
-    max-width: 200px; /* Adjust the maximum width as needed */
-    padding: 10px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-    white-space: nowrap; /* Prevent text from wrapping */
-    overflow: hidden;
-    text-overflow: ellipsis; /* Show ellipsis for long text */
-}
-
-.stocks button:hover {
-    background-color: #0056b3;
-}
-
-
-/* Add the rest of your existing CSS styles here */
-
-
-
-
-
-
-
-
-
-
-
-
-
-.graphs {
+#loadingOverlay {
+    display: none;
     position: fixed;
-    top: 0%;
-    left: 30%; /* Adjusted from right: 40% to align to the left */
-    /* right: 5%; Added to take the remaining space */
-    bottom: 0%;
-    /* height: 600px; */ /* Removed fixed height to take the available height */
-    width: 70%; /* Adjusted from 75% to take 70% of the width */
-    /* box-sizing: border-box; */
-    /* padding: 20px; */
-    height: 100%;
-    right: 10px;
-    /* border-style: solid; */
-    /* border-color: #5f9ed9; */
-    /* border-width: 2px; */
-    /* border-radius: 20px; */
-    background-color: #fafbf9;
-    /* box-shadow: -2px 0 5px rgba(177, 42, 42, 0.1); */
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-bottom: 100px;
-}
-
-.plot {
-    height: 100%;
+    top: 0;
+    left: 0;
     width: 100%;
-    margin-right: 10%;
-    margin-left: 0%;
-    box-sizing: border-box;
-    background-color: black;
-    border-width: 10px;
-    border-color: #a91717;
-    padding-left: 10px;
-    padding-bottom: 10px;
-    padding-right: 10px;
-    padding-top: 10px;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.8);
+    z-index: 9999;
 }
 
-/* Add the rest of your existing CSS styles here */
+#loadingText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+}
 
-/* Add this to your existing style.css or create a new section for checkbox styling */
+
+#checkboxContainer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
 .checkboxRow {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 5px; /* Adjust the margin as needed */
 }
 
 .checkboxRow label {
     margin-right: 10px;
-    font-size: 14px;
-    color: #333; /* Adjust color as needed */
+    display: block;
 }
 
+/* Move the checkbox styles outside the media query */
 .checkboxRow input {
-    margin-top: -2px; /* Adjust vertical alignment */
+    margin-top: 5px; /* Adjust the margin as needed */
 }
 
-.checkboxRow input:checked + label {
-    font-weight: bold;
-    color: #007bff; /* Change color for checked labels */
+@media (max-width: 600px) {
+    .checkboxRow label {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    .checkboxRow input {
+        margin-top: 5px; /* Adjust the margin as needed */
+    }
 }
-
-
-.graphs .header {
-    text-align: center;
-    padding: 20px;
-    background-color: #007bff;
-    color: #fff;
-    /* border-radius: 8px 8px 0 0; */
-    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
-}
-
-.graphs .header h1 {
-    margin: 0;
-    font-size: 24px;
-}
-
