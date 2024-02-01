@@ -58,6 +58,9 @@
         </div>
     </form>
     <div class ="graphs">
+        <div id="header">
+            <h1>Bunteye</h1>
+        </div>
         <div id="plot"></div>
     </div>
     <div id="loadingOverlay">
@@ -190,6 +193,7 @@ function updatePlot(response) {
     }
 
     Plotly.newPlot('plot', plotData, layout);
+    console.log("Graph Plotted")
 }
 
     
@@ -256,8 +260,8 @@ function updatePlot(response) {
     
             function updatePlotSize() {
                 var container = document.getElementById('plot');
-                var newWidth = window.innerWidth * 0.75;
-                var newHeight = window.innerHeight * 0.75;
+                var newWidth = window.innerWidth * 0.70;
+                var newHeight = window.innerHeight * 0.70;
                 var newPadding = 20;
                 container.style.width = newWidth + 'px';
                 container.style.height = newHeight + 'px';
