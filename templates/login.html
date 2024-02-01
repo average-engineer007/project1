@@ -5,6 +5,13 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <style>
+        body {
+            background-image: url("{{ url_for('static', filename='5072609.jpg') }}");
+            background-size: cover; /* Adjust this property based on your preference */
+            /* Add other styling as needed */
+        }
+    </style>
     <div class="form-container">
         <h2>Login</h2>
         <form action="/login" method="post">
