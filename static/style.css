@@ -34,6 +34,7 @@ h2{
     margin-bottom: 15px;
 }
 .form-container{
+    margin-top: 100px;
     margin-bottom: 200px;
 }
 input[type="text"], input[type="password"] {
@@ -352,7 +353,9 @@ select{
     text-align: center;
     padding: 2%;
     background-color: #007bff;
+    /* background-image: "{{ url_for('static', filename='original.jpeg') }}"; */
     color: #fff;
+    /* z-index: 100; */
     /* border-radius: 8px 8px 0 0; */
     /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); */
 }

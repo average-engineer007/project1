@@ -6,14 +6,15 @@
 </head>
 <body>
     <style>
+        #loginbutton {
+            color: white;}
         body {
             background-image: url("{{ url_for('static', filename='5072609.jpg') }}");
-            background-size: cover; /* Adjust this property based on your preference */
-            /* Add other styling as needed */
+            background-size: cover; 
         }
     </style>
     <div class="form-container">
-        <h2>Login</h2>
+        <h2 class="Login">Login</h2>
         <form action="/login" method="post">
             <div class="form-group">
                 <input type="text" name="username" placeholder="Username" required autocomplete="off">
@@ -22,10 +23,10 @@
                 <input type="password" name="password" placeholder="Password" required autocomplete="off">
             </div>
             <div class="form-group">
-                <button type="submit">Login</button>
+                <button type="submit" id="loginbutton">Login</button>
             </div>
         </form>
-        <p>Don't have an account? <a href="/register">Register here</a></p>
+        <p class="register">Don't have an account? <a href="/register">Register here</a></p>
     </div>
 </body>
 </html>

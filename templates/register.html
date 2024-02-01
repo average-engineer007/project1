@@ -6,6 +6,14 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 </head>
 <body>
+    <style>
+        #registerButton {
+            color: white;}
+        body {
+            background-image: url("{{ url_for('static', filename='5072609.jpg') }}");
+            background-size: cover; 
+        }
+    </style>
     <div class="form-container">
         <h2>Register</h2>
         <form action="/register" method="post">
@@ -20,7 +28,7 @@
                 <button type="submit" id="registerButton" disabled>Register</button>
             </div>
         </form>
-        <p>Already have an account? <a href="/">Login here</a></p>
+        <p class="register">Already have an account? <a href="/register">Login here</a></p>
 
         <script>
             $(document).ready(function () {
