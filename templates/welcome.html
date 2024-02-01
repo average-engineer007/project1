@@ -17,6 +17,8 @@
 <body>
     <form id="stockSelect" action="/fetchStockData" method="POST">  
       <div class="stocks">
+        <button id="resizeButton" type="button">Resize</button>
+
           <label for ="selectOption"> Select a Stock to Explore:</label>
   
           <input type="text" id="my-element">
@@ -432,6 +434,27 @@
         });
     });
   </script>
+
+
+<script>
+    $(document).ready(function () {
+        $('#resizeButton').on('click', function () {
+            // Get the current width of the stocks section
+            var currentStocksWidth = $('.stocks').width();
+
+            // Check if it's already at 10%, if so, reset to 30% for stocks and 70% for graphs
+            if (currentStocksWidth === $(window).width() * 0.1) {
+                $('.stocks').width($(window).width() * 0.3);
+                $('.graphs').width($(window).width() * 0.7);
+            } else {
+                // Set the stocks section to 10% and the graphs section to 90%
+                $('.stocks').width($(window).width() * 0.1);
+                $('.graphs').width($(window).width() * 0.9);
+            }
+        });
+    });
+</script>
+
   
   
   
