@@ -10,6 +10,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        #header {
+            background: url("{{ url_for('static', filename='original(4).jpg') }}");
+            background-size:contain;
+            background-repeat: no-repeat;
+            height: 200px; /* Set the height of your header */
+            /* Add any other styles you need for your header */
+        }
+        .name{
+            padding-left: 500px;
+            font-size: 50px;
+            
+        }
+
+        #header h1 {
+            color: white; /* Set the text color to contrast with the background */
+            text-align: center; /* Center the text within the header */
+            padding-top: 80px; /* Adjust the padding as needed */
+        }
+    </style>
 </head>
 <body>
     <div id="selected-list"></div>
@@ -58,7 +78,7 @@
     </form>
     <div class ="graphs">
         <div id="header">
-            <h1>Bunteye</h1>
+            <h4 class="name">Bunteye</h4>
         </div>
         <div id="plot"></div>
     </div>
@@ -179,7 +199,8 @@
         },
         yaxis: {
             title: 'Stock Price'
-        }
+        },
+        
     };
     Plotly.newPlot('plot', plotData, layout);
     console.log("Type of Graph Plotted : ", plotType)
